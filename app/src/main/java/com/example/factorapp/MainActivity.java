@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     boolean mCountRunning =false;
     int mQuestionAnsORNot =0;
     int mHighestStreak =0;
-    long mInitialTime =25900;
+    long mti =25900;
     long mtemp;
 
     int[] options = {1, 1, 1};
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             if (mCountRunning)
             {
                 mCountDownTimer.cancel();}
-            timer(mInitialTime);
+            timer(mti);
             mCountRunning = true;
             view = this.getWindow().getDecorView();
             view.setBackgroundColor(Color.WHITE);
@@ -128,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
             if (mHighestStreak <= StreakCount) {
                 mHighestStreak = StreakCount;
             }
-            mstreak.setText(" "+Integer.toString(mHighestStreak) + "-" + "0");
+            mstreak.setText(Integer.toString(mHighestStreak) + "-" + "0");
+            save();
+
         }
         else
             Toast.makeText(getApplicationContext(), "press go to proceed", Toast.LENGTH_SHORT).show();
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             CorrectCount = savedInstanceState.getInt("answer");
             TotalCount = savedInstanceState.getInt("total");
-            mHighestStreak =savedInstanceState.getInt("Streak");
+           mHighestStreak =savedInstanceState.getInt("Streak");
 
         } else {
             CorrectCount = 0;
@@ -160,13 +162,7 @@ public class MainActivity extends AppCompatActivity {
         mtime = (TextView) findViewById(R.id.time);
         mend = (TextView)  findViewById(R.id.end);
         mscore.setText(" " + Integer.toString(CorrectCount) + "/" + Integer.toString(TotalCount));
-        SharedPreferences sharedPreferences = getSharedPreferences("STREAK",MODE_PRIVATE);
-        mHighestStreak = sharedPreferences.getInt ("streak",0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("streak", mHighestStreak);
-        editor.commit();
-        mstreak.setText(Integer.toString(mHighestStreak) + "-" + "0");
-
+        load();
     }
 
 
@@ -246,6 +242,18 @@ public class MainActivity extends AppCompatActivity {
         mOptionA.setText(Integer.toString(options[0]));
         mOptionB.setText(Integer.toString(options[1]));
         mOptionC.setText(Integer.toString(options[2]));
+    }
+    public void save(){
+        SharedPreferences sharedPreferences = getSharedPreferences("STREAK",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("streak", mHighestStreak);
+        editor.apply();
+
+    }
+    public void load(){
+        SharedPreferences sharedPreferences = getSharedPreferences("STREAK",MODE_PRIVATE);
+        mHighestStreak = sharedPreferences.getInt ("streak",0);
+        mstreak.setText(Integer.toString(mHighestStreak) + "-" + "0");
     }
 
 
